@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Engineer Learning Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<style>
+/* Layout: one big hand-drawn machine diagram is the page; prose is a thin caption around it; a side sheet opens per part. */
+:root{
+  --paper:#f5f2ea; --paper2:#ece7db; --ink:#2b2822; --muted:#6f685c; --rule:#c9c0ae;
+  --rose:#f2cdcb; --sand:#f6dfbf; --sage:#d3e5cc; --goal:#1f6f54; --goal-ink:#f5f2ea;
+  --needs:#2f63b8; --unl:#c0602a;
+  --hand:"Kalam","Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1d1c19; --paper2:#26241f; --ink:#e9e3d6; --muted:#a69e90; --rule:#4c483f;
+  --rose:#5b3433; --sand:#5a4830; --sage:#334d38; --goal:#2a8a66; --goal-ink:#f5f2ea;
+  --needs:#86aaf0; --unl:#eb9c62; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#1d1c19; --paper2:#26241f; --ink:#e9e3d6; --muted:#a69e90; --rule:#4c483f;
+  --rose:#5b3433; --sand:#5a4830; --sage:#334d38; --goal:#2a8a66; --goal-ink:#f5f2ea;
+  --needs:#86aaf0; --unl:#eb9c62; color-scheme:dark}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.55}
+.wrap{max-width:1500px;margin:0 auto;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{max-width:62ch}
+h1{font-family:var(--hand);font-weight:700;font-size:clamp(34px,5vw,54px);line-height:1.05;margin:0 0 10px;text-wrap:balance}
+h2{font-family:var(--hand);font-weight:700;font-size:28px;margin:0 0 6px;text-wrap:balance}
+.lede{color:var(--muted);margin:0}
+.stages{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 8px}
+.stages button{font-family:var(--hand);font-size:16px;background:transparent;color:var(--ink);border:1.5px solid var(--rule);border-radius:14px 10px 15px 9px;padding:4px 12px;cursor:pointer}
+.stages button[aria-pressed="true"]{border-color:var(--ink);background:var(--paper2);font-weight:700}
+.stages button:focus-visible{outline:2px solid var(--needs);outline-offset:2px}
+.caption{font-family:var(--hand);font-size:19px;min-height:2.2em;margin:4px 0 10px}
+.caption b{color:var(--unl)}
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1px dashed var(--rule);border-bottom:1px dashed var(--rule);padding-block:10px}
+.scroller svg{display:block;width:100%;min-width:1080px;height:auto}
+.hint{font-family:var(--hand);color:var(--muted);font-size:15px;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center}
+.sw{display:inline-block;width:14px;height:14px;border:1.5px solid var(--ink);border-radius:4px;vertical-align:-2px;margin-right:5px}
+.k-line{display:inline-block;width:26px;border-top:2.5px solid;vertical-align:4px;margin-right:5px}
+@media (min-width:900px){.only-narrow{display:none}}
+
+svg text{font-family:var(--hand);fill:var(--ink)}
+.ink path,.nline path{stroke:var(--ink)}
+.reg path{stroke:var(--muted)}
+.regl{font-size:17px;font-weight:700;fill:var(--muted)}
+.alab{font-size:13px;fill:var(--muted)}
+.node{cursor:pointer;transition:opacity .2s}
+.node .nfill{stroke:none}
+.p-e .nfill{fill:var(--rose)} .p-m .nfill{fill:var(--sand)} .p-g .nfill{fill:var(--sage)} .p-s .nfill{fill:var(--paper2)} .ctx .nfill{fill:transparent}
+.ntitle{font-size:15px;font-weight:700} .nsub{font-size:12px;fill:var(--muted)}
+.badge circle{fill:var(--paper);stroke:var(--ink);stroke-width:1.3} .badge text{font-size:11px;font-weight:700}
+.node:hover .nline path{stroke-width:2.4}
+.node:focus{outline:none} .node:focus-visible .nline path{stroke:var(--needs);stroke-width:3}
+.p-s .ntitle{fill:var(--muted)} .p-s .nline path{stroke:var(--muted)}
+.goal .nfill{fill:var(--goal)} .goal text{fill:var(--goal-ink)}
+.staged .node.future{opacity:.18}
+.staged .node.now .nline path{stroke:var(--unl);stroke-width:3}
+.focus .node{opacity:.16}
+.focus .node.sel,.focus .node.need,.focus .node.unl{opacity:1}
+.focus .node.sel .nline path{stroke-width:3.2}
+.focus .node.need .nline path{stroke:var(--needs);stroke-width:2.6}
+.focus .node.unl .nline path{stroke:var(--unl);stroke-width:2.6}
+.link{fill:none;stroke-width:2.2;stroke-dasharray:7 5;animation:dash 1.2s linear infinite}
+.link.n{stroke:var(--needs)} .link.u{stroke:var(--unl)}
+#mn path{fill:var(--needs)} #mu path{fill:var(--unl)}
+@keyframes dash{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion:reduce){.link{animation:none}.node{transition:none}}
+
+.loop{margin-top:56px;max-width:1100px}
+.loop .scroller svg{min-width:760px}
+
+/* side sheet */
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(460px,100vw);background:var(--paper);border-left:1.5px solid var(--ink);box-shadow:-12px 0 30px rgba(0,0,0,.12);overflow-y:auto;z-index:20;
+  padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));padding-left:22px;padding-right:max(22px,env(safe-area-inset-right,0px));
+  transform:translateX(105%);transition:transform .25s ease}
+.sheet.open{transform:none}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+.close{position:sticky;top:0;float:right;font-family:var(--hand);font-size:16px;background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);border-radius:12px 9px 13px 8px;padding:2px 12px;cursor:pointer}
+.close:focus-visible{outline:2px solid var(--needs);outline-offset:2px}
+.s-num{font-family:var(--hand);color:var(--muted);font-size:16px}
+.s-title{font-family:var(--hand);font-weight:700;font-size:32px;line-height:1.1;margin:2px 0 4px;text-wrap:balance}
+.s-full{color:var(--muted);font-size:15px;margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{font-family:var(--hand);font-size:14px;border:1.3px solid var(--ink);border-radius:10px 7px 11px 6px;padding:0 9px}
+.chip.e{background:var(--rose)} .chip.m{background:var(--sand)} .chip.g{background:var(--sage)} .chip.s{background:var(--paper2)}
+.s-h{font-family:var(--hand);font-weight:700;font-size:19px;margin:20px 0 4px}
+.lives{font-family:var(--hand);font-size:17px;margin:0}
+.lives span{color:var(--muted)}
+.why{margin:6px 0 0}
+#mini{width:100%;height:auto;display:block}
+#mini .mnode{cursor:pointer} #mini .mnode:hover path{stroke-width:2.4}
+.steps{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0}
+.steps>li{display:grid;grid-template-columns:34px 1fr;gap:10px;position:relative;padding-bottom:16px}
+.steps>li:not(:last-child)::before{content:"";position:absolute;left:16px;top:32px;bottom:0;border-left:2px dashed var(--rule)}
+.dot{width:32px;height:32px;border:1.6px solid var(--ink);border-radius:50% 46% 52% 48%;display:grid;place-items:center;font-family:var(--hand);font-weight:700;background:var(--paper2)}
+.steps h4{font-family:var(--hand);font-size:18px;margin:2px 0 2px;font-weight:700}
+.steps p,.steps ol{margin:0;font-size:15.5px}
+.steps ol{padding-left:18px}
+.pass{border:1.5px dashed var(--goal);border-radius:12px;padding:10px 12px;font-size:15.5px;margin-top:4px}
+.pass b{font-family:var(--hand);color:var(--goal)}
+.res{font-size:15.5px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>The agent you're building</h1>
+    <p class="lede">Every topic on your list is one part of this single machine. Click a part to see what it needs, what it opens up, and how you prove you know it. Use the stages to watch the machine grow.</p>
+  </header>
+
+  <div class="stages" id="stages" role="group" aria-label="Show the agent at a stage"></div>
+  <p class="caption" id="caption"></p>
+
+  <div class="scroller"><svg id="map" viewBox="0 0 1480 1015" role="img" aria-label="Diagram of the flagship agent with every topic placed where it lives"></svg></div>
+  <div class="hint">
+    <span><i class="sw" style="background:var(--rose)"></i>extremely important</span>
+    <span><i class="sw" style="background:var(--sand)"></i>must</span>
+    <span><i class="sw" style="background:var(--sage)"></i>good to have</span>
+    <span><i class="k-line" style="border-color:var(--needs)"></i>needs first</span>
+    <span><i class="k-line" style="border-color:var(--unl)"></i>opens up next</span>
+    <span class="only-narrow">swipe sideways to see the whole machine</span>
+  </div>
+
+  <section class="loop">
+    <h2>How you learn any one part</h2>
+    <p class="lede">Same four moves for every box. Feeling like you get it does not count. Passing the move does.</p>
+    <div class="scroller" style="margin-top:12px"><svg id="loop" viewBox="0 0 1000 250" role="img" aria-label="Explain, then build, then break, then retest after 14 days. Failing the retest sends you back to explain."></svg></div>
+  </section>
+</div>
+
+<aside class="sheet" id="sheet" aria-hidden="true" aria-labelledby="s-title">
+  <button class="close" id="close">close</button>
+  <div class="s-num" id="s-num"></div>
+  <div class="s-title" id="s-title"></div>
+  <p class="s-full" id="s-full"></p>
+  <div class="chips" id="s-chips"></div>
+  <p class="lives" id="s-lives"></p>
+  <p class="why" id="s-why"></p>
+  <div class="s-h">Where it plugs in</div>
+  <svg id="mini" viewBox="0 0 410 160"></svg>
+  <div id="s-learn"></div>
+  <div class="s-h">Start with</div>
+  <p class="res" id="s-res"></p>
+</aside>
+
+<script src="https://cdn.jsdelivr.net/npm/roughjs@4.6.6/bundled/rough.js"></script>
+<script>
+const TOPICS = [{"id": 1, "stage": "Stage 1: Talk to a model", "track": "Main path", "title": "Python fluency (async, typing, Pydantic) plus TypeScript you already know", "pri": "Must", "weeks": "1 to 2", "why": "Nearly every agent stack is Python or TS. You must read agent output fast.", "res": "Official Python tutorial (skim), Pydantic docs, your own project code", "needs": [], "q": ["What is the difference between a list, a tuple, a dict, and a set, and when do you use each?", "What do type hints do at runtime (nothing) and why use them anyway?", "What does a Pydantic model do when it receives bad data?"], "build": "Rewrite one module of your booking agent with full type hints and Pydantic models, with no help from an agent for the first 30 minutes.", "brk": "Feed your Pydantic models 5 kinds of bad input (missing field, wrong type, extra field, null, huge string) and predict the result before running each.", "pass": "You can read any 300 line Python file and explain what it does without running it, and your predictions on bad input are right at least 4 of 5 times."}, {"id": 2, "stage": "Stage 1: Talk to a model", "track": "Main path", "title": "Git, testing with pytest, CI with GitHub Actions", "pri": "Must", "weeks": "1 to 2", "why": "Tests are how you trust AI written code. Interviewers check if you test.", "res": "MIT Missing Semester (Git lecture), pytest docs", "needs": [1], "q": ["What is a commit, a branch, and a merge, in terms of what Git actually stores?", "What is the difference between a unit test and an integration test?", "Why should tests run on every push instead of only on your laptop?"], "build": "Add pytest tests to the flagship repo and a GitHub Actions workflow that runs them on every push.", "brk": "Introduce a bug on purpose in a branch, confirm CI fails, and fix it. Then resolve a merge conflict you create on purpose.", "pass": "CI badge is green on main, at least 15 meaningful tests exist, and you resolved a conflict without googling."}, {"id": 3, "stage": "Stage 1: Talk to a model", "track": "Main path", "title": "How LLMs behave in practice: tokens, context window, sampling, temperature, cost, latency", "pri": "Extremely Important", "weeks": "1 to 2", "why": "Every design decision is a trade between quality, cost, and latency.", "res": "Karpathy Intro to LLMs (YouTube, 1 hr); Anthropic and OpenAI docs on models and pricing", "needs": [], "q": ["What is a token and roughly how many tokens is a page of English text?", "What does temperature change, and when would you set it to 0?", "Why is the first token slow and the rest fast (time to first token vs tokens per second)?"], "build": "Write a script that sends the same task to 2 models at 2 temperatures and logs tokens, cost, and latency for each run into a CSV.", "brk": "Estimate the monthly cost of a feature (for example, 10k users, 5 queries a day, 2k tokens each) on paper first, then check it against real pricing pages.", "pass": "Your paper cost estimate is within 30 percent of the real number and you can explain every column in your CSV."}, {"id": 4, "stage": "Stage 1: Talk to a model", "track": "Main path", "title": "Structured outputs: JSON schema, Pydantic validation, retries on bad output", "pri": "Extremely Important", "weeks": "1 to 2", "why": "Agents only work when outputs are machine readable.", "res": "Instructor library docs (Jason Liu); provider structured output docs", "needs": [1, 3], "q": ["What is the difference between asking for JSON in the prompt and using the provider's structured output mode?", "What should your code do when the model returns invalid output?", "Why do enums and required fields reduce errors?"], "build": "Build an extractor that turns 20 messy legal or booking texts into validated Pydantic objects, with automatic retry on validation failure.", "brk": "Feed it 5 adversarial inputs (empty text, two languages, conflicting dates, very long input, irrelevant text) and measure how many outputs are valid and correct.", "pass": "At least 95 percent of 20 normal inputs come back valid and correct, and you can explain each failure."}, {"id": 5, "stage": "Stage 1: Talk to a model", "track": "Main path", "title": "How a program runs: processes, threads, memory, files, system calls", "pri": "Must", "weeks": "1 to 3", "why": "Needed to explain why an agent server is slow, leaking memory, or stuck.", "res": "Julia Evans zines (Bite Size Linux), then OSTEP chapters 4 to 6, 13, 26", "needs": [], "q": ["What is the difference between a process and a thread, and what do they share?", "What happens, step by step, when your Python code opens and reads a file?", "What is the difference between memory on the stack and on the heap, in plain words?"], "build": "Run your FastAPI server and use ps, top, and lsof to show its process, its threads, its memory use, and the files and ports it has open.", "brk": "Write a script with a memory leak (a list that keeps growing), watch memory climb in top, and fix it.", "pass": "You can draw from memory, on a blank page, what the OS does when a program starts, and you correctly predicted the leak's behavior."}, {"id": 6, "stage": "Stage 2: Give it tools", "track": "Main path", "title": "Tool calling (function calling)", "pri": "Extremely Important", "weeks": "2 to 3", "why": "The core primitive of every agent.", "res": "Anthropic tool use docs; OpenAI function calling docs", "needs": [4], "q": ["Walk through the full message loop: user message, tool call, tool result, final answer. Who runs the tool?", "How does the model decide which tool to call, and how do tool descriptions affect that?", "What happens when a tool errors, and what should you send back to the model?"], "build": "Build a tool calling loop from scratch with no framework, with 3 tools (search, book, cancel), against a real model API.", "brk": "Make one tool fail randomly 30 percent of the time and make the agent recover gracefully. Then give two tools confusingly similar descriptions and observe wrong picks.", "pass": "Your loop handles 10 scripted conversations correctly, recovers from tool errors, and you can explain why the model picked each tool."}, {"id": 7, "stage": "Stage 2: Give it tools", "track": "Main path", "title": "Concurrency and async: event loop, async/await, race conditions, timeouts", "pri": "Extremely Important", "weeks": "2 to 4", "why": "Agents make many parallel tool and model calls. Most production agent bugs live here.", "res": "Hussein Nasser YouTube (event loop, async); Python asyncio docs", "needs": [5, 1], "q": ["What is the event loop and why can one thread handle 1000 waiting requests?", "What happens if you call a slow blocking function inside an async handler?", "What is a race condition? Give an example from a booking system."], "build": "Run 20 LLM calls in parallel with asyncio.gather, with a timeout on each and a concurrency limit of 5.", "brk": "Put a time.sleep inside an async FastAPI route and show that all requests slow down; fix it. Then create a double booking race with two concurrent requests and fix it with a lock or a database constraint.", "pass": "Your parallel version is at least 4 times faster than sequential, and you reproduced and fixed both bugs."}, {"id": 8, "stage": "Stage 2: Give it tools", "track": "Main path", "title": "Networking: DNS, TCP, TLS, HTTP/1.1 vs HTTP/2, latency", "pri": "Must", "weeks": "2 to 4", "why": "Every model call is a network call. Latency and timeouts decide user experience.", "res": "Julia Evans Networking ACK zine; Hussein Nasser; CodeCrafters HTTP server", "needs": [5], "q": ["What happens from typing api.anthropic.com in your code to receiving the first byte?", "Why does TLS add round trips, and how does connection reuse help?", "What is the difference between a connection timeout and a read timeout?"], "build": "Use curl with timing flags to break one API call into DNS, connect, TLS, and first byte times. Build the first 3 stages of CodeCrafters HTTP server.", "brk": "Point your app at a host that never responds and confirm your timeouts trigger. Then compare 50 calls with and without a reused HTTP client.", "pass": "You can draw the request journey on a blank page and explain your curl timing numbers line by line."}, {"id": 9, "stage": "Stage 2: Give it tools", "track": "Main path", "title": "Streaming: Server Sent Events, WebSockets, token streaming", "pri": "Extremely Important", "weeks": "3 to 4", "why": "All chat and voice agents stream. You already used WebSockets, so this is your interview story.", "res": "Hussein Nasser (SSE vs WebSockets); Anthropic streaming docs", "needs": [7, 8], "q": ["Why do LLM APIs stream with SSE rather than WebSockets?", "When would you choose WebSockets instead (relate to your IoT telemetry work)?", "What happens to a stream when the user closes the tab, and how should the server react?"], "build": "Stream model tokens from FastAPI to a browser with SSE, and stream tool call progress events too.", "brk": "Kill the client mid stream and make sure the server stops the model call (no wasted tokens). Add a reconnect that resumes cleanly.", "pass": "Your stream shows first token in under 1 second and you can explain the SSE vs WebSocket choice using your own IoT project."}, {"id": 10, "stage": "Stage 2: Give it tools", "track": "Main path", "title": "API design for reliability: idempotency, retries with backoff, rate limits, timeouts", "pri": "Extremely Important", "weeks": "3 to 5", "why": "Model APIs fail and rate limit constantly. Retries without idempotency cause double bookings.", "res": "Stripe engineering blog on idempotency; ByteByteGo shorts", "needs": [8], "q": ["What does idempotent mean and why does a booking endpoint need an idempotency key?", "What is exponential backoff with jitter and why the jitter?", "Which errors should you retry (429, 503, timeouts) and which never (400, 401)?"], "build": "Wrap all model calls in retry with backoff and jitter, and add idempotency keys to the booking tool.", "brk": "Simulate a 429 storm and a timeout after the booking succeeded; prove no duplicate booking is created.", "pass": "Your fault injection test passes with zero duplicates and you can defend every retry decision."}, {"id": 11, "stage": "Stage 2: Give it tools", "track": "Main path", "title": "MCP (Model Context Protocol): servers, clients, transports, auth", "pri": "Extremely Important", "weeks": "3 to 5", "why": "The standard way to connect agents to tools. Most agent companies expect it.", "res": "modelcontextprotocol.io docs and SDK examples", "needs": [6, 8, 9], "q": ["What problem does MCP solve compared with hand written tool definitions per app?", "What are tools, resources, and prompts in MCP?", "What is the difference between the stdio and HTTP transports, and when do you use each?"], "build": "Publish an MCP server (for example Kubernetes read only tools) and connect it to Claude Code or Claude Desktop.", "brk": "Add a tool that could be destructive and make it require explicit confirmation. Test what happens when the server crashes mid call.", "pass": "Someone else can install your server from the README in under 10 minutes."}, {"id": 12, "stage": "Stage 3: Context and memory", "track": "Main path", "title": "Context engineering: what goes into the window, memory, summarization, compaction", "pri": "Extremely Important", "weeks": "3 to 5", "why": "By 2027 this replaces prompt engineering as the key skill for long running agents.", "res": "Anthropic engineering blog: Effective context engineering for AI agents", "needs": [6, 3], "q": ["Why does an agent get worse as its context fills up, even before the limit?", "What are 3 ways to keep context small (summarize, offload to files, retrieve on demand)?", "What is the difference between short term and long term memory for an agent?"], "build": "Make your agent handle a 50 turn task by compacting old turns and storing notes in a file it can reread.", "brk": "Run the same long task with and without compaction and compare success rate and token cost.", "pass": "You show numbers: the compacted version uses fewer tokens and succeeds at least as often."}, {"id": 13, "stage": "Stage 3: Context and memory", "track": "Main path", "title": "Agent patterns: workflows vs agents, routing, planner and executor, subagents, human in the loop", "pri": "Extremely Important", "weeks": "4 to 6", "why": "Interviewers ask when NOT to use an agent. Knowing simple workflows beats complex agents.", "res": "Anthropic: Building effective agents (blog post)", "needs": [6, 12], "q": ["What is the difference between a workflow and an agent, and when is each the better choice?", "Name 4 workflow patterns (prompt chaining, routing, parallelization, orchestrator and workers) with one use case each.", "When do subagents help, and what do they cost?"], "build": "Redesign your flagship as a mix: fixed workflow where the steps are known, agent loop only where they are not. Draw the diagram.", "brk": "Replace one agent step with a plain workflow and measure if quality, cost, or latency improved.", "pass": "You can justify every box in your architecture diagram in one sentence each."}, {"id": 14, "stage": "Stage 3: Context and memory", "track": "Main path", "title": "Databases: SQL, indexes, transactions, isolation levels", "pri": "Must", "weeks": "4 to 6", "why": "Agents read and write business data. Reviewing AI generated queries needs this.", "res": "Use The Index Luke (free site); CMU 15-445 lectures 1 to 8", "needs": [5], "q": ["What is an index, physically, and why does it make reads faster and writes slower?", "What does a transaction guarantee (ACID in plain words)?", "What can go wrong with two concurrent transactions at a weak isolation level?"], "build": "Load 1 million rows into Postgres, write 5 queries, and use EXPLAIN ANALYZE to speed each one up with the right index.", "brk": "Reproduce a lost update with two concurrent sessions, then prevent it with SELECT FOR UPDATE or a constraint.", "pass": "Each query gets at least 10 times faster and you can read an EXPLAIN plan out loud."}, {"id": 15, "stage": "Stage 3: Context and memory", "track": "Main path", "title": "Embeddings and vector search basics (cosine similarity, ANN indexes)", "pri": "Extremely Important", "weeks": "4 to 5", "why": "Foundation of all retrieval. Asked in nearly every AI interview.", "res": "Pinecone learning center articles; pgvector docs", "needs": [3], "q": ["What is an embedding and why do similar meanings end up close together?", "What is cosine similarity in plain words?", "Why is HNSW fast, and what does it trade away (exactness, memory)?"], "build": "Embed 1000 documents and write brute force search yourself in NumPy before using any library.", "brk": "Find 3 queries where embedding search fails (exact IDs, names, negation) and explain why.", "pass": "Your NumPy search matches library results and you can explain each failure case."}, {"id": 16, "stage": "Stage 3: Context and memory", "track": "Main path", "title": "Postgres plus pgvector (one database for data and vectors)", "pri": "Extremely Important", "weeks": "4 to 6", "why": "Most startups store embeddings in Postgres instead of a separate vector DB.", "res": "pgvector README; Supabase vector docs", "needs": [14, 15], "q": ["Why would a startup keep vectors in Postgres instead of a dedicated vector DB?", "What is the difference between IVFFlat and HNSW indexes in pgvector?", "How do you filter by metadata (for example tenant id) and search vectors in one query?"], "build": "Store flagship documents and embeddings in Postgres with an HNSW index and tenant filtering.", "brk": "Compare recall and latency with and without the index on 10k rows.", "pass": "You report recall and p95 latency numbers for both setups."}, {"id": 17, "stage": "Stage 4: Make it find things", "track": "Main path", "title": "Chunking, hybrid search (BM25 plus vectors), metadata filters, reranking", "pri": "Extremely Important", "weeks": "5 to 7", "why": "Naive RAG fails in production. Hybrid plus reranking is the standard fix.", "res": "Jason Liu RAG blog (jxnl.co); Anthropic Contextual Retrieval post", "needs": [16, 15], "q": ["How does chunk size change retrieval quality, and why is there no single right size?", "What does BM25 catch that vectors miss, and the reverse?", "What does a reranker do differently from the first stage search?"], "build": "Build vector only, hybrid, and hybrid plus rerank pipelines over the same corpus.", "brk": "Measure recall at 5 for all three on 50 labeled questions and explain where each one fails.", "pass": "A table of recall numbers that shows a measured improvement, and an explanation for it."}, {"id": 18, "stage": "Stage 4: Make it find things", "track": "Main path", "title": "One agent framework, deeply (pick ONE: Claude Agent SDK, OpenAI Agents SDK, LangGraph, or Vercel AI SDK)", "pri": "Must", "weeks": "5 to 7", "why": "Job posts list frameworks, but knowing one well transfers. Learning all is wasted time.", "res": "Framework official docs and examples only", "needs": [13], "q": ["What does the framework do for you that your from scratch loop did not?", "What does it hide that you need to understand when it breaks?", "How does it handle state, handoffs, or subagents?"], "build": "Rebuild or extend the flagship with the chosen framework, including at least one subagent or handoff.", "brk": "Debug one failure that happens inside the framework by reading its source code.", "pass": "You can explain one framework internal you learned from reading source."}, {"id": 19, "stage": "Stage 4: Make it find things", "track": "Main path", "title": "Agentic retrieval: search as a tool, multi step search, grep style code and doc search", "pri": "Extremely Important", "weeks": "6 to 8", "why": "The 2026 to 2027 shift: agents search iteratively instead of one shot RAG.", "res": "Anthropic multi agent research system blog post", "needs": [17, 13], "q": ["How is search as a tool different from classic RAG that always retrieves first?", "When does agentic search beat one shot RAG, and what does it cost in latency?", "How do you stop an agent from searching forever?"], "build": "Give your agent search as a tool with a step budget and let it decide when and what to search.", "brk": "Compare one shot RAG vs agentic search on multi hop questions for accuracy, latency, and cost.", "pass": "A comparison table with all three numbers and a recommendation for when to use each."}, {"id": 20, "stage": "Stage 5: Prove it works", "track": "Main path", "title": "Eval datasets and metrics: golden sets, code based checks, LLM as judge, judge calibration", "pri": "Extremely Important", "weeks": "4 to 8", "why": "Every FDE take home now asks for an eval harness.", "res": "Hamel Husain blog: Your AI product needs evals; Chip Huyen AI Engineering, evaluation chapter", "needs": [37], "q": ["When do you use an exact code check vs an LLM judge?", "How do you know your LLM judge is trustworthy (agreement with your own labels)?", "Why should an eval suite gate deploys, and what threshold would you set?"], "build": "Create a 50 plus case eval suite with code checks and one calibrated LLM judge, running in CI.", "brk": "Make a prompt change that should hurt quality and confirm the suite catches it.", "pass": "Judge agrees with your labels at least 85 percent of the time, and CI blocks a bad change."}, {"id": 21, "stage": "Stage 5: Prove it works", "track": "Main path", "title": "Tracing and observability: Langfuse or OpenTelemetry for LLM calls", "pri": "Extremely Important", "weeks": "5 to 7", "why": "You cannot debug an agent without traces. Companies expect this on day one.", "res": "Langfuse docs (open source, self host with Docker)", "needs": [6, 10], "q": ["What is a trace, a span, and why are they nested?", "What 5 numbers would you put on an agent dashboard?", "How do traces feed your error analysis?"], "build": "Trace every flagship run in self hosted Langfuse with cost, latency, and tool calls.", "brk": "Find the slowest step in your agent using only traces and speed it up.", "pass": "You can open any failed run and locate the failing step in under 2 minutes."}, {"id": 22, "stage": "Stage 5: Prove it works", "track": "Main path", "title": "Caching and queues: Redis, background jobs", "pri": "Must", "weeks": "5 to 6", "why": "Long agent runs must leave the request path. Caching cuts LLM cost.", "res": "CodeCrafters Build your own Redis (first stages); Redis docs", "needs": [14, 10], "q": ["Why should a 3 minute agent task not run inside the HTTP request?", "What is cache invalidation and why is it hard?", "What happens to queued jobs if the worker crashes?"], "build": "Move long agent runs to a Redis backed job queue with status polling, and cache repeated embedding calls.", "brk": "Kill the worker mid job and show the job is retried or marked failed, never silently lost.", "pass": "No lost jobs in your crash test, and cache hit rate is visible."}, {"id": 23, "stage": "Stage 5: Prove it works", "track": "Main path", "title": "Abstention and grounding: saying I do not know, citations", "pri": "Must", "weeks": "7 to 8", "why": "Hallucination in legal, finance, health is the main reason customers reject AI.", "res": "Hamel Husain blog; provider citation docs", "needs": [17, 20], "q": ["Why do models answer confidently when retrieval returns nothing useful?", "What are 2 ways to make a system abstain (relevance threshold, explicit instruction)?", "How do you check that a citation actually supports the claim?"], "build": "Add citations and an abstain path, plus an eval for unanswerable questions.", "brk": "Ask 20 questions with no answer in the corpus and measure the abstain rate.", "pass": "At least 90 percent correct abstention without hurting answerable question accuracy by more than 5 percent."}, {"id": 24, "stage": "Stage 6: Ship it safely", "track": "Main path", "title": "Docker and Kubernetes basics", "pri": "Must", "weeks": "5 to 7", "why": "Agents run in containers. Your Headlamp work makes this a strength, keep it sharp.", "res": "Docker docs; your Headlamp experience; KodeKloud free labs", "needs": [5, 8], "q": ["What is a container, really (process plus isolation), and how is it different from a VM?", "What are a Pod, Deployment, and Service, and why do you need each?", "How does a Pod find a database (DNS and Services)?"], "build": "Run the whole flagship stack with docker compose, then deploy it to a kind cluster with a Helm chart.", "brk": "Kill a pod, break a readiness probe, and set a too small memory limit; diagnose each with kubectl.", "pass": "You fix all 3 failures using only kubectl output, no guessing."}, {"id": 25, "stage": "Stage 6: Ship it safely", "track": "Main path", "title": "Security basics: auth, OAuth 2.0, secrets, least privilege", "pri": "Extremely Important", "weeks": "6 to 8", "why": "Agents act on behalf of users with real permissions. OAuth is central to MCP.", "res": "Julia Evans HTTP zine; OAuth.com playground; MCP auth spec", "needs": [8, 10], "q": ["What is the difference between authentication and authorization?", "Walk through the OAuth authorization code flow step by step.", "Why should an agent get a scoped token rather than an admin key?"], "build": "Add OAuth to your MCP server or app and store secrets outside the code.", "brk": "Scan your repo history for leaked keys, rotate any you find, and try calling a tool with an expired token.", "pass": "You can draw the OAuth flow on a blank page and your repo has zero secrets."}, {"id": 26, "stage": "Stage 6: Ship it safely", "track": "Main path", "title": "Guardrails and agent security: prompt injection, tool permissions, sandboxing, approvals", "pri": "Extremely Important", "weeks": "7 to 9", "why": "Agents with real tools are a security risk. Enterprises buy only safe agents.", "res": "Simon Willison on prompt injection; OWASP Top 10 for LLM Applications", "needs": [25, 13], "q": ["What is prompt injection and why can it not be fully solved with a better prompt?", "What is the lethal trifecta (private data, untrusted content, ability to send data out)?", "Which actions should require human approval, and why?"], "build": "Add permission levels to tools and human approval for destructive actions.", "brk": "Plant an injection in a retrieved document that tries to trigger a destructive tool; confirm it is blocked.", "pass": "Your injection test fails to cause harm, and you can explain which layer stopped it."}, {"id": 27, "stage": "Stage 6: Ship it safely", "track": "Main path", "title": "One cloud (AWS or GCP): compute, storage, IAM, serverless", "pri": "Must", "weeks": "6 to 8", "why": "FDEs deploy inside customer clouds. IAM is where most deployments break.", "res": "AWS Skill Builder free tier or GCP Skills Boost", "needs": [24, 25], "q": ["What is IAM, and what is least privilege in practice?", "When would you pick serverless vs a container service?", "How does your app get secrets in the cloud?"], "build": "Deploy the flagship to one cloud with a public URL and a least privilege role.", "brk": "Remove one permission and debug the access denied error from logs alone.", "pass": "Live URL works and you fixed the IAM error in under 20 minutes."}, {"id": 28, "stage": "Stage 6: Ship it safely", "track": "Main path", "title": "LLMOps: model gateways, routing, fallbacks, prompt caching, cost tracking", "pri": "Must", "weeks": "8 to 10", "why": "Cost control is a top customer complaint. Gateways are standard infra.", "res": "LiteLLM docs; Portkey docs; Anthropic prompt caching docs", "needs": [10, 21], "q": ["Why put a gateway between your app and model providers?", "How does prompt caching reduce cost and latency, and what breaks a cache hit?", "How would you route easy requests to a cheap model?"], "build": "Route through a gateway with fallback to a second provider and per task cost tracking.", "brk": "Disable the primary provider and confirm fallback works; measure cost before and after caching.", "pass": "You report cost per task before and after, with a real saving."}, {"id": 29, "stage": "Stage 7: Run it for real", "track": "Main path", "title": "System design basics for AI apps (load, scaling, failure, cost)", "pri": "Must", "weeks": "8 to 12", "why": "FDE and AI engineer loops include a design round on an AI product.", "res": "ByteByteGo YouTube; Chip Huyen AI Engineering, architecture chapter", "needs": [14, 22, 24, 10], "q": ["How do you go from requirements to numbers (users, requests per second, tokens per day)?", "Where are the bottlenecks in an LLM app (model latency, rate limits, retrieval)?", "What happens when the model provider is down?"], "build": "Design a RAG support bot for 10k users on paper in 40 minutes, then compare with a reference design.", "brk": "Do one mock design round with a friend or with Claude acting as a strict interviewer.", "pass": "You complete the design in 40 minutes, covering requirements, numbers, components, failure modes, and cost."}, {"id": 30, "stage": "Stage 7: Run it for real", "track": "Main path", "title": "Durable execution for long agent runs: checkpoints, resume, retries (Temporal, Inngest, or similar)", "pri": "Must", "weeks": "9 to 11", "why": "Agents that run for hours must survive crashes. Growing infra category for 2027.", "res": "Temporal docs (Python SDK tutorial)", "needs": [22, 13], "q": ["What does durable execution guarantee that a plain job queue does not?", "Why must steps be deterministic or recorded?", "How do you resume an agent mid task?"], "build": "Run a long agent task as a durable workflow with checkpoints.", "brk": "Kill the process mid task and show it resumes from the last step, not from zero.", "pass": "Resume works and no tool call is repeated."}, {"id": 31, "stage": "Stage 7: Run it for real", "track": "Main path", "title": "Sandboxed code execution for agents (E2B, Daytona, containers)", "pri": "Must", "weeks": "9 to 11", "why": "Coding and data agents run untrusted code. Every agent platform needs this.", "res": "E2B docs; Daytona docs", "needs": [24, 26], "q": ["Why is running model generated code on your server dangerous?", "What does a sandbox isolate (filesystem, network, CPU, time)?", "How is a microVM different from a container for this purpose?"], "build": "Let your agent run generated Python inside a sandbox and return results.", "brk": "Try malicious code (infinite loop, file deletion, network call) and confirm each is contained.", "pass": "All 3 attacks are contained, and you can explain the isolation layer for each."}, {"id": 32, "stage": "Stage 7: Run it for real", "track": "Optional", "title": "Running open models: Ollama locally, vLLM basics, quantization concept", "pri": "Good to Have", "weeks": "11 to 12", "why": "Some enterprise and government customers need on prem models. Good FDE talking point.", "res": "Ollama docs; vLLM quickstart", "needs": [24], "q": ["Why would a customer insist on an open model?", "What does quantization trade away?", "What does vLLM do to serve many users efficiently (batching)?"], "build": "Serve an open model locally and point your agent at it through the gateway.", "brk": "Compare quality and latency against an API model on your eval suite.", "pass": "You have eval numbers for both and a recommendation."}, {"id": 33, "stage": "Stage 8: Get hired", "track": "Main path", "title": "Problem decomposition and customer case studies", "pri": "Extremely Important", "weeks": "8 to 16", "why": "About half of an FDE loop is case study and customer judgment, not code.", "res": "FDE interview guides (Aced, A10X); weekly mock cases with a friend or Claude", "needs": [13, 20], "q": ["What clarifying questions do you ask before proposing anything?", "How do you define success metrics a customer cares about?", "How do you scope a first version that ships in 2 weeks?"], "build": "Do 8 mock cases (for example: a law firm wants AI contract review) and write a one page plan for each.", "brk": "Have the mock interviewer change a constraint mid case (budget cut, data privacy rule) and adapt.", "pass": "Each plan has clarifying questions, metrics, a v1 scope, risks, and an eval plan, done in 30 minutes."}, {"id": 34, "stage": "Stage 8: Get hired", "track": "Main path", "title": "Project deep dive story for each resume line", "pri": "Extremely Important", "weeks": "8 to 16", "why": "AI startups mostly grill your resume. Every line must survive 15 minutes of why.", "res": "Record yourself explaining, rewatch, fix gaps", "needs": [29, 20], "q": ["For each bullet: what was the problem, what did you build, why that design, what failed, what numbers?", "What would you change now?", "What would break at 10 times the scale?"], "build": "Write a one page story for each of your 6 resume bullets.", "brk": "Have Claude or a friend grill one bullet for 15 minutes with only why questions.", "pass": "You survive 15 minutes of why on every bullet without saying I am not sure more than once."}, {"id": 35, "stage": "Stage 8: Get hired", "track": "Main path", "title": "Machine coding: build a small working system in 90 minutes", "pri": "Good to Have", "weeks": "10 to 12", "why": "Used by some Indian product companies and in AI take homes.", "res": "Practice prompts: rate limiter, LRU cache, booking API, mini RAG", "needs": [2, 10], "q": ["How do you split 90 minutes (plan, core, tests, polish)?", "What do graders look for (working code, structure, tests)?", "What do you cut when time runs out?"], "build": "Build 3 timed mini systems with AI tools allowed.", "brk": "Have someone add a new requirement at minute 60.", "pass": "All 3 run, have tests, and handle the late requirement."}, {"id": 36, "stage": "Daily habit (runs in parallel)", "track": "Daily habit", "title": "Coding agent workflow (Claude Code, Codex, Cursor): writing specs, splitting tasks, reviewing diffs", "pri": "Extremely Important", "weeks": "1 to 16 (daily)", "why": "By 2027 nearly all code is agent written. Your value is directing agents and catching their mistakes.", "res": "Claude Code docs and best practices post; daily use on your flagship project", "needs": [], "q": ["Why does a written spec produce better agent output than a one line request?", "How do you split a feature so an agent can finish each piece without getting lost?", "What are the 4 most common mistakes coding agents make in a diff, and how do you spot each one?"], "build": "Write a one page spec for a real feature, let the agent implement it, and merge it only after you have read every line of the diff and run the tests.", "brk": "Take an agent diff and find at least one real bug, security hole, or unnecessary change before merging. Log it in your notes. Repeat weekly.", "pass": "Across 4 weeks you have a log of at least 8 issues you caught in agent diffs, and you can explain each one."}, {"id": 37, "stage": "Daily habit (runs in parallel)", "track": "Daily habit", "title": "Error analysis: reading traces, labeling failures, building a failure taxonomy", "pri": "Extremely Important", "weeks": "3 to 16 (weekly)", "why": "The number one skill that separates AI engineers from demo builders in 2027.", "res": "Hamel Husain and Shreya Shankar evals FAQ (hamel.dev) and course", "needs": [6], "q": ["Why do you read 50 to 100 real traces before writing any eval?", "What is open coding vs axial coding of failures, in plain words?", "How do you decide which failure category to fix first?"], "build": "Every week, read 20 traces from your agent and add labeled failures to a spreadsheet with categories.", "brk": "Pick your top failure category, fix it, and re run to show the count drop.", "pass": "You have 100 labeled failures, a taxonomy of 5 to 8 categories, and at least 2 categories you measurably reduced."}, {"id": 38, "stage": "Daily habit (runs in parallel)", "track": "Daily habit", "title": "Writing: design docs, READMEs, short blog posts on what you learned", "pri": "Must", "weeks": "2 to 16", "why": "Writing shows judgment. Posts are your outreach ammunition.", "res": "Write about your own failure analysis; keep each post under 800 words", "needs": [37], "q": ["What is the one sentence takeaway of your post?", "What numbers support it?", "Who is the reader and what should they do after reading?"], "build": "Publish 2 posts with real numbers from your evals and a README a stranger can follow.", "brk": "Ask someone outside tech to read the README and set up the project; watch where they get stuck.", "pass": "A stranger set up your project without asking you anything."}, {"id": 39, "stage": "Daily habit (runs in parallel)", "track": "Daily habit", "title": "DSA basics: arrays, hashing, two pointers, sliding window, stack, binary search, trees, BFS and DFS", "pri": "Must", "weeks": "1 to 12 (45 min daily)", "why": "Many startups still have one easy to medium screening round. Enough to pass, no more.", "res": "NeetCode.io roadmap videos (short, visual)", "needs": [1], "q": ["For each pattern, what problem shape signals it?", "What is the time and space complexity of your solution?", "What edge cases did you test?"], "build": "Solve about 75 problems from NeetCode 150, mostly easy and medium.", "brk": "Redo 10 random solved problems a week later without looking.", "pass": "You solve a new medium problem in 30 minutes while talking through your approach out loud."}, {"id": 40, "stage": "Daily habit (runs in parallel)", "track": "Daily habit", "title": "Domain knowledge: legal tech workflows (from your internship)", "pri": "Good to Have", "weeks": "Ongoing", "why": "A domain story makes you memorable to legal, fintech, and compliance AI companies.", "res": "Your current internship", "needs": [], "q": ["Describe one legal workflow end to end.", "Where does AI fail in it and why?", "What would a lawyer need to trust the output?"], "build": "Write a one page note on one legal workflow and its AI failure points.", "brk": "Explain it to someone non technical in 3 minutes.", "pass": "A non technical listener can repeat the workflow back to you."}, {"id": 41, "stage": "Optional or Skip", "track": "Optional", "title": "Voice agents (speech to text, text to speech, turn taking latency)", "pri": "Good to Have", "weeks": "Optional", "why": "Big in India (Bolna, Smallest.ai, Gnani). Only if you target those companies.", "res": "Pipecat or LiveKit Agents docs", "needs": [9], "q": ["Where does latency come from in a voice pipeline?", "What is turn detection?", "Why stream every stage?"], "build": "One voice demo with under 1 second response.", "brk": "Interrupt the agent mid sentence and handle it.", "pass": "Under 1 second response, interruption works."}, {"id": 42, "stage": "Optional or Skip", "track": "Optional", "title": "Fine tuning (LoRA, when to fine tune vs RAG vs prompting)", "pri": "Good to Have", "weeks": "Concept only", "why": "Know when it is the right call. Doing it is rarely the job for AI engineers.", "res": "Chip Huyen AI Engineering, finetuning chapter", "needs": [3], "q": ["When does fine tuning beat RAG?", "What does LoRA change?", "What data do you need?"], "build": "None needed. Concept only.", "brk": "Explain the decision for 3 example use cases.", "pass": "You give a correct recommendation for 3 scenarios."}, {"id": 43, "stage": "Optional or Skip", "track": "Optional", "title": "Transformer internals at a high level (attention, why context is expensive)", "pri": "Good to Have", "weeks": "Concept only", "why": "Helps explain cost and latency trade offs, not needed to build products.", "res": "3Blue1Brown transformer videos", "needs": [3], "q": ["What does attention do in one sentence?", "Why does cost grow with context length?", "What is the KV cache?"], "build": "None needed. Concept only.", "brk": "Explain attention in 2 minutes to a friend.", "pass": "2 minute explanation without notes."}, {"id": 44, "stage": "Optional or Skip", "track": "Skip", "title": "Hard DSA, competitive programming, LeetCode hard", "pri": "Can Skip", "weeks": "Skip", "why": "Only for big tech and trading firms, which you are not targeting.", "res": "None", "needs": [], "q": ["No test. Skip."], "build": "No test. Skip.", "brk": "No test. Skip.", "pass": "No test. Skip."}, {"id": 45, "stage": "Optional or Skip", "track": "Skip", "title": "Training models from scratch, deep ML math, classical ML (sklearn)", "pri": "Can Skip", "weeks": "Skip", "why": "Research and data science track, not AI engineer or FDE.", "res": "None", "needs": [], "q": ["No test. Skip."], "build": "No test. Skip.", "brk": "No test. Skip.", "pass": "No test. Skip."}, {"id": 46, "stage": "Optional or Skip", "track": "Skip", "title": "Prompt engineering only courses and certificates", "pri": "Can Skip", "weeks": "Skip", "why": "Prompting is now a basic skill; certificates carry almost no hiring weight.", "res": "None", "needs": [], "q": ["No test. Skip."], "build": "No test. Skip.", "brk": "No test. Skip.", "pass": "No test. Skip."}, {"id": 47, "stage": "Optional or Skip", "track": "Skip", "title": "Learning many agent frameworks or old LangChain chains", "pri": "Can Skip", "weeks": "Skip", "why": "Frameworks change every few months. Depth in one beats shallow in five.", "res": "None", "needs": [], "q": ["No test. Skip."], "build": "No test. Skip.", "brk": "No test. Skip.", "pass": "No test. Skip."}, {"id": 48, "stage": "Optional or Skip", "track": "Skip", "title": "Deep frontend framework learning beyond your current Next.js level", "pri": "Can Skip", "weeks": "Skip", "why": "Agents generate frontend well. Your current level is enough for demos.", "res": "None", "needs": [], "q": ["No test. Skip."], "build": "No test. Skip.", "brk": "No test. Skip.", "pass": "No test. Skip."}];
+const T = Object.fromEntries(TOPICS.map(t => [t.id, t]));
+TOPICS.forEach(t => t.unlocks = TOPICS.filter(o => (o.needs || []).includes(t.id)).map(o => o.id));
+
+const SHORT = {1:"Python fluency",2:"Git, tests, CI",3:"How LLMs behave",4:"Structured outputs",5:"Processes + memory",6:"Tool calling",7:"Async + concurrency",8:"Networking",9:"Streaming (SSE, WS)",10:"API reliability",11:"MCP",12:"Context engineering",13:"Agent patterns",14:"Databases + SQL",15:"Embeddings",16:"Postgres + pgvector",17:"Hybrid search + rerank",18:"One agent framework",19:"Agentic retrieval",20:"Evals + judges",21:"Tracing",22:"Caching + queues",23:"Grounding + citations",24:"Docker + K8s",25:"Security + OAuth",26:"Guardrails",27:"One cloud",28:"LLMOps gateway",29:"System design",30:"Durable execution",31:"Sandboxes",32:"Open models",33:"Case studies",34:"Deep dive stories",35:"Machine coding",36:"Coding agent workflow",37:"Error analysis",38:"Writing",39:"DSA basics",40:"Legal domain",41:"Voice agents",42:"Fine tuning",43:"Transformer basics",44:"Hard DSA",45:"Training from scratch",46:"Prompt courses",47:"Many frameworks",48:"Deep frontend"};
+const ROLE = {1:"the language it's written in",2:"how you trust changes",3:"the engine's quirks",4:"answers code can read",5:"what the OS is doing",6:"lets it act",7:"many calls at once",8:"every call crosses it",9:"words appear live",10:"survives flaky APIs",11:"plug-in tools",12:"what it holds in mind",13:"how it works in steps",14:"business data",15:"meaning as numbers",16:"data + vectors, one DB",17:"finds the right chunk",18:"one framework, deeply",19:"searches on its own",20:"a score for quality",21:"see every step",22:"work off the request",23:"says \"I don't know\"",24:"box it, run anywhere",25:"who may do what",26:"blocks bad actions",27:"where it lives",28:"route, fallback, cost",29:"design it on a whiteboard",30:"survives crashes",31:"safe place to run code",32:"run models yourself",33:"solve a customer's problem",34:"defend every resume line",35:"build fast against a clock",36:"direct your coding agents",37:"read traces, name failures",38:"show your judgment",39:"pass the screening round",40:"your domain story",41:"talk instead of type",42:"when training is worth it",43:"why long context costs"};
+
+const REGIONS = [
+  {k:"watch",name:"Watching it work",blurb:"how you know it is any good",box:[370,30,750,110],ids:{21:[390,62,220,56],37:[635,62,220,56],20:[880,62,220,56]}},
+  {k:"door",name:"Front door",blurb:"where requests come in and replies stream out",box:[170,200,170,320],ids:{9:[185,240,140,58],10:[185,340,140,58],25:[185,440,140,58]}},
+  {k:"brain",name:"The agent loop",blurb:"the part that decides what to do next",box:[370,170,520,250],ids:{3:[385,210,155,58],4:[550,210,155,58],6:[715,210,155,58],12:[385,310,155,58],13:[550,310,155,58],18:[715,310,155,58]}},
+  {k:"model",name:"Talking to models",blurb:"how it reaches the LLM",box:[920,170,200,250],ids:{28:[935,210,170,58],32:[935,342,170,58]}},
+  {k:"data",name:"Memory and knowledge",blurb:"what it knows and can look up",box:[370,450,520,200],ids:{14:[385,490,155,58],15:[550,490,155,58],16:[715,490,155,58],17:[385,575,155,58],19:[550,575,155,58],23:[715,575,155,58]}},
+  {k:"long",name:"Long-running work",blurb:"jobs that outlive one request",box:[370,672,520,100],ids:{22:[385,708,245,52],30:[640,708,235,52]}},
+  {k:"tools",name:"Tools it can touch",blurb:"what it is allowed to do in the world",box:[920,450,200,322],ids:{11:[935,490,170,58],26:[935,585,170,58],31:[935,680,170,58]}},
+  {k:"you",name:"You, every day",blurb:"habits that run alongside all 16 weeks",box:[20,590,320,182],ids:{36:[35,630,140,52],38:[185,630,140,52],39:[35,705,140,52],40:[185,705,140,52]}},
+  {k:"base",name:"What it all runs on",blurb:"the ground everything else stands on",box:[20,800,1100,122],ids:{}},
+  {k:"hire",name:"Getting hired",blurb:"turning the machine into interview stories",box:[1160,30,300,892],ids:{29:[1180,80,260,58],33:[1180,158,260,58],34:[1180,236,260,58],35:[1180,314,260,58],41:[1180,442,260,50],42:[1180,502,260,50],43:[1180,562,260,50]}},
+];
+[1,2,5,7,8,24,27].forEach((id,i) => REGIONS.find(r => r.k==="base").ids[id] = [40+i*152,846,140,56]);
+const SKIP = [44,45,46,47,48];
+const POS = {}, WHERE = {};
+REGIONS.forEach(r => Object.entries(r.ids).forEach(([id,b]) => { POS[id]=b; WHERE[id]=r; }));
+SKIP.forEach((id,i) => { POS[id]=[250+i*245,955,230,46]; WHERE[id]={name:"Leave alone for now",blurb:"not worth your hours for AI engineer or FDE roles"}; });
+[41,42,43].forEach(id => WHERE[id] = {name:"Optional extras",blurb:"only if a company you target needs it"});
+
+const STAGES = [
+  [0,"Whole map","Everything at once. Click any box."],
+  [1,"1 · Talk to a model","Your code sends text to a model and gets back <b>clean, typed answers</b>."],
+  [2,"2 · Give it tools","It can <b>call functions</b>, stream its reply, and survive flaky APIs."],
+  [3,"3 · Context + memory","It <b>remembers</b>, keeps its context small, and stores data and vectors in one place."],
+  [4,"4 · Find things","It <b>searches your documents</b> well, and decides by itself when to search."],
+  [5,"5 · Prove it works","You can <b>see every step</b> and put a number on quality."],
+  [6,"6 · Ship it safely","It is <b>containerised, secured and guarded</b>, on one cloud, with costs tracked."],
+  [7,"7 · Run it for real","Long runs <b>survive crashes</b>, generated code runs in a sandbox, the design holds at scale."],
+  [8,"8 · Get hired","Every box becomes <b>an interview story</b>."],
+];
+const stageOf = t => { const m = /^Stage (\d)/.exec(t.stage||""); return m ? +m[1] : (t.track==="Daily habit" ? 0 : 99); };
+const priKey = p => p.startsWith("Extremely") ? "e" : p==="Must" ? "m" : p.startsWith("Good") ? "g" : "s";
+
+const NS = "http://www.w3.org/2000/svg";
+const el = (n,a={},p) => { const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(p) p.appendChild(e); return e; };
+const rr = (x,y,w,h,r) => `M${x+r} ${y}H${x+w-r}Q${x+w} ${y} ${x+w} ${y+r}V${y+h-r}Q${x+w} ${y+h} ${x+w-r} ${y+h}H${x+r}Q${x} ${y+h} ${x} ${y+h-r}V${y+r}Q${x} ${y} ${x+r} ${y}Z`;
+function sketch(svg, d, o={}){
+  if (window.rough){ try { return rough.svg(svg).path(d, Object.assign({roughness:1.1,bowing:1.2,strokeWidth:1.6,fill:"none"},o)); } catch(e){} }
+  const g = el("g"); el("path",{d,fill:"none","stroke-width":o.strokeWidth||1.6,"stroke-dasharray":o.strokeLineDash?o.strokeLineDash.join(" "):""},g); return g;
+}
+function arrow(svg, x1,y1,x2,y2, seed, cls="ink", dash){
+  const g = el("g",{class:cls},svg);
+  const o = {seed,strokeWidth:1.5,roughness:.9}; if(dash) o.strokeLineDash=[6,5];
+  g.appendChild(sketch(svg,`M${x1} ${y1}L${x2} ${y2}`,o));
+  const a=Math.atan2(y2-y1,x2-x1), L=9;
+  g.appendChild(sketch(svg,`M${x2-L*Math.cos(a-.45)} ${y2-L*Math.sin(a-.45)}L${x2} ${y2}L${x2-L*Math.cos(a+.45)} ${y2-L*Math.sin(a+.45)}`,{seed:seed+1,strokeWidth:1.5,roughness:.6}));
+  return g;
+}
+function text(parent, x,y, s, cls, anchor="middle", max){ const t=el("text",{x,y,class:cls,"text-anchor":anchor},parent); t.textContent=s; if(max) t.dataset.max=max; return t; }
+function fit(root){ root.querySelectorAll("text[data-max]").forEach(t=>{ t.style.fontSize=""; const L=t.getComputedTextLength(), m=+t.dataset.max; if(L>m) t.style.fontSize=(parseFloat(getComputedStyle(t).fontSize)*m/L).toFixed(2)+"px"; }); }
+
+/* ---------- main map ---------- */
+const map = document.getElementById("map");
+const lay = {reg:el("g",{},map), arr:el("g",{},map), nodes:el("g",{},map), links:el("g",{"pointer-events":"none"},map)};
+const defs = el("defs",{},map);
+[["mn"],["mu"]].forEach(([id]) => { const m=el("marker",{id,viewBox:"0 0 10 10",refX:8,refY:5,markerWidth:7,markerHeight:7,orient:"auto-start-reverse"},defs); el("path",{d:"M0 0L10 5L0 10z"},m); });
+
+REGIONS.forEach((r,i) => {
+  const [x,y,w,h]=r.box, g=el("g",{class:"reg"},lay.reg);
+  g.appendChild(sketch(map, rr(x,y,w,h,16), {seed:300+i,strokeWidth:1.3,strokeLineDash:[8,6],roughness:.8}));
+  text(lay.reg, x+14, y+22, r.name, "regl", "start");
+});
+text(lay.reg, 1180, 432, "optional extras", "alab", "start");
+text(lay.reg, 20, 984, "Leave these alone for now:", "regl", "start");
+
+// context boxes that are not topics
+function ctx(x,y,w,h,l1,l2,seed){
+  const g=el("g",{class:"node ctx",style:"cursor:default"},lay.nodes);
+  const s=sketch(map, rr(x,y,w,h,12), {seed,strokeLineDash:[5,5],strokeWidth:1.3}); s.setAttribute("class","nline"); g.appendChild(s);
+  text(g,x+w/2,y+h/2-4,l1,"ntitle"); text(g,x+w/2,y+h/2+14,l2,"nsub");
+}
+ctx(20,300,122,130,"End user","browser or app",901);
+ctx(935,282,170,48,"Model APIs","Claude, GPT, Gemini",902);
+
+// flows between parts of the machine
+const A=[[143,365,168,365,"",0],[341,295,368,295,"",0],[891,239,918,239,"calls",0],[880,412,930,454,"acts",0],[630,421,630,449,"reads + writes",0],[630,651,630,671,"hands off",0],[630,141,630,169,"watches every step",1],[1122,560,1158,560,"explain",0]];
+A.forEach(([x1,y1,x2,y2,l,d],i) => { arrow(lay.arr,x1,y1,x2,y2,500+i*3,"ink",d); if(l) x1===x2 ? text(lay.arr, x1+8, (y1+y2)/2+4, l, "alab", "start") : text(lay.arr, (x1+x2)/2, Math.min(y1,y2)-6, l, "alab", "middle"); });
+text(lay.arr,560,794,"everything above runs on this","alab","middle");
+const nodeEls = {};
+Object.entries(POS).forEach(([id,[x,y,w,h]]) => {
+  id=+id; const t=T[id], pk=priKey(t.pri), opt=[41,42,43].includes(id), skip=SKIP.includes(id);
+  const g=el("g",{class:`node p-${pk}`,tabindex:0,role:"button","aria-label":`${id} ${SHORT[id]}: open details`,"data-id":id},lay.nodes);
+  el("path",{d:rr(x+1,y+1,w-2,h-2,10),class:"nfill"},g);
+  const o={seed:id*11}; if(opt) o.strokeLineDash=[6,5];
+  const s=sketch(map, rr(x,y,w,h,10), o); s.setAttribute("class","nline"); g.appendChild(s);
+  const sub = ROLE[id] && !skip;
+  text(g, x+w/2, y+h/2+(sub?-3:5), SHORT[id], "ntitle", "middle", w-18);
+  if(sub) text(g, x+w/2, y+h/2+15, ROLE[id], "nsub", "middle", w-16);
+  if(skip){ const k=sketch(map,`M${x+12} ${y+h-10}L${x+w-12} ${y+10}`,{seed:id,strokeWidth:1.2}); k.setAttribute("class","nline"); g.appendChild(k); }
+  const b=el("g",{class:"badge"},g); el("circle",{cx:x+4,cy:y+4,r:11},b); text(b,x+4,y+8,String(id),"");
+  g.addEventListener("click",()=>openTopic(id));
+  g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTopic(id); }});
+  nodeEls[id]=g;
+});
+// the goal
+(() => { const g=el("g",{class:"node goal",style:"cursor:default"},lay.nodes), [x,y,w,h]=[1180,660,260,240];
+  el("path",{d:rr(x,y,w,h,16),class:"nfill"},g);
+  [["The goal",y+42,"ntitle"],["one agent, live on the cloud,",y+80,"nsub"],["with tools and retrieval,",y+100,"nsub"],["measured by evals,",y+120,"nsub"],["safe to run.",y+140,"nsub"],["And you can explain",y+180,"ntitle"],["every layer of it.",y+202,"ntitle"]]
+    .forEach(([s,yy,c])=>{ const tt=text(g,x+w/2,yy,s,c); tt.style.fill="var(--goal-ink)"; if(c==="nsub") tt.style.fontSize="14px"; });
+})();
+
+/* ---------- stage scrubber ---------- */
+let stage = 0;
+const stBox=document.getElementById("stages"), cap=document.getElementById("caption");
+STAGES.forEach(([n,label]) => { const b=document.createElement("button"); b.textContent=label; b.setAttribute("aria-pressed",n===0); b.onclick=()=>setStage(n); stBox.appendChild(b); });
+function setStage(n){
+  stage=n; [...stBox.children].forEach((b,i)=>b.setAttribute("aria-pressed",i===n));
+  cap.innerHTML = STAGES[n][2] + (n ? ` <span style="color:var(--muted)">Orange outline: new this stage. Faded: later.</span>` : "");
+  map.classList.toggle("staged", n>0);
+  Object.entries(nodeEls).forEach(([id,g]) => { const s=stageOf(T[id]); g.classList.toggle("now", n>0 && s===n); g.classList.toggle("future", n>0 && s!==0 && s>n); });
+}
+setStage(0);
+
+/* ---------- selection: draw what connects ---------- */
+function center([x,y,w,h]){ return [x+w/2,y+h/2]; }
+function edge(b,tx,ty){ const [cx,cy]=center(b), dx=tx-cx, dy=ty-cy; const s=Math.min((b[2]/2+3)/Math.abs(dx||1e-6),(b[3]/2+3)/Math.abs(dy||1e-6)); return [cx+dx*s, cy+dy*s]; }
+function link(from,to,cls){
+  const A=POS[from], B=POS[to]; if(!A||!B) return;
+  const [bx,by]=center(B), [ax,ay]=center(A);
+  const [x1,y1]=edge(A,bx,by), [x2,y2]=edge(B,ax,ay);
+  const mx=(x1+x2)/2, my=(y1+y2)/2, len=Math.hypot(x2-x1,y2-y1), k=Math.min(60,len*.18);
+  const cx=mx-(y2-y1)/len*k, cy=my+(x2-x1)/len*k;
+  el("path",{d:`M${x1} ${y1}Q${cx} ${cy} ${x2} ${y2}`,class:`link ${cls}`,"marker-end":`url(#m${cls})`},lay.links);
+}
+function highlight(id){
+  lay.links.innerHTML="";
+  Object.values(nodeEls).forEach(g=>g.classList.remove("sel","need","unl"));
+  map.classList.toggle("focus", id!=null);
+  if(id==null) return;
+  const t=T[id]; nodeEls[id].classList.add("sel");
+  t.needs.forEach(n=>{ nodeEls[n]?.classList.add("need"); link(n,id,"n"); });
+  t.unlocks.forEach(u=>{ nodeEls[u]?.classList.add("unl"); link(id,u,"u"); });
+}
+
+/* ---------- side sheet ---------- */
+const sheet=document.getElementById("sheet"), $=id=>document.getElementById(id);
+let lastFocus=null;
+function openTopic(id){
+  const t=T[id], pk=priKey(t.pri), w=WHERE[id]||{};
+  lastFocus = document.activeElement;
+  highlight(id);
+  $("s-num").textContent = `#${id}` + (t.weeks && !/skip/i.test(t.weeks) ? ` · weeks ${t.weeks}` : "");
+  $("s-title").textContent = SHORT[id];
+  $("s-full").textContent = t.title;
+  $("s-chips").innerHTML = `<span class="chip ${pk}">${t.pri}</span><span class="chip">${t.stage}</span>`;
+  $("s-lives").innerHTML = `Lives in <b>${w.name||""}</b> <span>· ${w.blurb||""}</span>`;
+  $("s-why").textContent = t.why || "";
+  drawMini(t);
+  const skip = /skip/i.test(t.q[0]||"");
+  $("s-learn").innerHTML = skip ? `<div class="s-h">Why skip it</div><p class="why">Spend the hours on the boxes in the machine instead.</p>` : `
+    <div class="s-h">Prove you know it, in 4 moves</div>
+    <ol class="steps">
+      <li><span class="dot">1</span><div><h4>Explain it, no notes</h4><ol>${t.q.map(q=>`<li>${q}</li>`).join("")}</ol></div></li>
+      <li><span class="dot">2</span><div><h4>Build it into the agent</h4><p>${t.build}</p></div></li>
+      <li><span class="dot">3</span><div><h4>Break it on purpose</h4><p>${t.brk}</p></div></li>
+      <li><span class="dot">4</span><div><h4>Retest cold, 14 days later</h4><p>Answer move 1 again with nothing open. Pass and it's mastered. Fail and go back to move 1.</p></div></li>
+    </ol>
+    <div class="pass"><b>Passed when:</b> ${t.pass}</div>`;
+  $("s-res").textContent = t.res && t.res!=="None" ? t.res : "Nothing. That's the point.";
+  sheet.classList.add("open"); sheet.setAttribute("aria-hidden","false"); sheet.scrollTop=0;
+  $("close").focus({preventScroll:true});
+  try { history.replaceState(null,"","#t"+id); } catch(e){}
+}
+function closeSheet(){
+  sheet.classList.remove("open"); sheet.setAttribute("aria-hidden","true"); highlight(null);
+  try { history.replaceState(null,"",location.pathname+location.search); } catch(e){}
+  if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true});
+}
+$("close").onclick=closeSheet;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && sheet.classList.contains("open")) closeSheet(); });
+map.addEventListener("click",e=>{ if(!e.target.closest(".node[data-id]") && sheet.classList.contains("open")) closeSheet(); });
+
+function drawMini(t){
+  const svg=$("mini"); svg.innerHTML="";
+  const L=t.needs, R=t.unlocks, rows=Math.max(L.length,R.length,1), H=Math.max(120, rows*52+20);
+  svg.setAttribute("viewBox",`0 0 410 ${H}`);
+  const bw=118, bh=40, colY=(n,i)=> H/2 - (n*52-12)/2 + i*52;
+  const cx=146, cy=H/2-26, cw=118, ch=52;
+  const box=(x,y,w,h,id,cls,seed)=>{
+    const g=el("g",{class:"mnode "+cls},svg), pk=priKey(T[id].pri);
+    el("path",{d:rr(x,y,w,h,9),style:`fill:var(--${{e:"rose",m:"sand",g:"sage",s:"paper2"}[pk]})`},g);
+    const s=sketch(svg,rr(x,y,w,h,9),{seed,strokeWidth:cls==="me"?2.2:1.4}); s.setAttribute("class","nline"); g.appendChild(s);
+    const lbl=SHORT[id]; text(g,x+w/2,y+h/2+5,lbl,"ntitle","middle",w-12);
+    if(cls!=="me"){ g.setAttribute("tabindex",0); g.setAttribute("role","button"); g.setAttribute("aria-label","Open "+lbl);
+      g.onclick=()=>openTopic(id); g.onkeydown=e=>{ if(e.key==="Enter"){ openTopic(id);} }; }
+    return g;
+  };
+  const sideLabel=(x,s,anchor)=>text(svg,x,14,s,"alab",anchor);
+  sideLabel(4,"needs first","start"); sideLabel(406,"opens up","end");
+  box(cx,cy,cw,ch,t.id,"me",t.id*13);
+  if(!L.length) text(svg,60,H/2+5,"start here","alab");
+  if(!R.length) text(svg,350,H/2+5,"end of a branch","alab");
+  L.forEach((n,i)=>{ const y=colY(L.length,i); box(4,y,bw,bh,n,"",n*17); const g=arrow(svg,4+bw+3,y+bh/2,cx-4,H/2,700+i*5); g.querySelectorAll("path").forEach(p=>p.style.stroke="var(--needs)"); });
+  R.forEach((u,i)=>{ const y=colY(R.length,i); box(288,y,bw,bh,u,"",u*19); const g=arrow(svg,cx+cw+4,H/2,288-3,y+bh/2,800+i*5); g.querySelectorAll("path").forEach(p=>p.style.stroke="var(--unl)"); });
+  fit(svg);
+}
+
+/* ---------- the learning loop ---------- */
+(() => {
+  const svg=$("loop"), g=el("g",{},svg);
+  const S=[["1 · Explain","answer 3 questions,","no notes open","p-e"],["2 · Build","add it to the agent,","no tutorial open","p-m"],["3 · Break","predict, break it,","then fix it","p-m"],["4 · Retest","same questions, cold,","14 days later","p-e"]];
+  S.forEach(([a,b,c,pk],i)=>{ const x=20+i*200, y=50, w=160, h=96, n=el("g",{class:`node ${pk}`,style:"cursor:default"},g);
+    el("path",{d:rr(x,y,w,h,12),class:"nfill"},n); const s=sketch(svg,rr(x,y,w,h,12),{seed:40+i}); s.setAttribute("class","nline"); n.appendChild(s);
+    text(n,x+w/2,y+32,a,"ntitle"); text(n,x+w/2,y+58,b,"nsub"); text(n,x+w/2,y+76,c,"nsub");
+    if(i<3) arrow(g,x+w+6,y+h/2,x+200-6,y+h/2,60+i*3); });
+  text(g,600,88,"wait","alab");
+  const m=el("g",{class:"node goal",style:"cursor:default"},g); el("path",{d:rr(830,50,150,96,14),class:"nfill"},m);
+  const mt=text(m,905,92,"Mastered","ntitle"); mt.style.fill="var(--goal-ink)"; const ms=text(m,905,116,"it's in long-term memory","nsub"); ms.style.fill="var(--goal-ink)";
+  arrow(g,786,98,824,98,70); text(g,805,86,"pass","alab");
+  const back=el("g",{class:"ink"},g); back.appendChild(sketch(svg,"M700 150 C 700 225, 100 225, 100 152",{seed:77,strokeWidth:1.5,strokeLineDash:[7,5]}));
+  arrow(g,103,165,100,150,80); text(g,400,232,"fail the retest: back to Explain, no shame, that's how memory works","alab");
+})();
+
+fit(map); document.fonts && document.fonts.ready.then(()=>fit(map));
+const h=/^#t(\d+)$/.exec(location.hash); if(h && T[+h[1]] && POS[+h[1]]) openTopic(+h[1]);
+</script>
+
+</body>
+</html>
